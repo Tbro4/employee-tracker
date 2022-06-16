@@ -9,9 +9,13 @@ Employee.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
-    dep_name: {
+    first_name: {
       type: DataTypes.STRING,
     },
+    last_name: {
+      type: DataTypes.STRING,
+    },
+
     role_id: {
       type: DataTypes.INTEGER,
       references: {

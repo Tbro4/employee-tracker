@@ -16,7 +16,7 @@ Role.init(
       type: DataTypes.STRING,
     },
     department_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       references: {
         model: "department",
         key: "id",
