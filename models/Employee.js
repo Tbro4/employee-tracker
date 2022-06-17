@@ -16,6 +16,9 @@ Employee.init(
     last_name: {
       type: DataTypes.STRING,
     },
+    role: {
+      type: DataTypes.STRING,
+    },
 
     role_id: {
       type: DataTypes.INTEGER,
@@ -23,6 +26,9 @@ Employee.init(
         model: "role",
         key: "id",
       },
+    },
+    manager: {
+      type: DataTypes.STRING,
     },
     manager_id: {
       type: DataTypes.INTEGER,

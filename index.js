@@ -3,35 +3,77 @@ require("console.table");
 const { Employee, Role, Department } = require("./models");
 // const seedData = require("./seeds/seed");
 
-let roleChoices = [1, 2, "3"];
-
-let managerChoices = [1, 2, "3"];
-
-let employees = [];
+employees = [];
 
 let depChoices = async () => {
   const departmentChoices = await Department.findAll({
     attributes: ["id", "dep_name"],
     raw: true,
   });
+  //this becomes the array that is returned for the list of department choices
   let choices = [];
   departmentChoices.forEach((choice) => {
     choices.push(choice.dep_name);
   });
-
   return choices;
+};
 
-  // return departmentChoices;
-  // process.exit(0);
+let roleChoices = async () => {
+  const roleFinder = await Role.findAll({
+    attributes: ["id", "title"],
+    raw: true,
+  });
+  let choices = [];
+  roleFinder.forEach((choice) => {
+    choices.push(choice.title);
+  });
+  return choices;
+};
+
+let managerChoices = async () => {
+  const manChoices = await Employee.findAll({
+    attributes: ["id", "first_name", "last_name"],
+    raw: true,
+  });
+  let choices = [];
+  manChoices.forEach((choice) => {
+    choices.push(`${choice.first_name} ${choice.last_name}`);
+  });
+  return choices;
 };
 
 let addEmployees = async () => {
   inquirer.prompt(addEmployee).then(async (data) => {
+    let roleChoice = data.role;
+
+    //we need to split the names apart
+    let managerChoice = data.manager;
+
+    let manChoiceSplit = managerChoice.split(" ");
+    //firstName is a string value of first name
+    let firstName = manChoiceSplit[0];
+
+    let finder = await Role.findOne({
+      where: {
+        title: roleChoice,
+      },
+      raw: true,
+    });
+    //we need to split the names apart
+
+    let manFinder = await Employee.findOne({
+      where: {
+        first_name: firstName,
+      },
+      raw: true,
+    });
     const employee = await Employee.create({
       first_name: data.first_name,
       last_name: data.last_name,
-      role_id: data.role_id,
-      manager_id: data.manager_id,
+      role: data.role,
+      role_id: finder.id,
+      manager: data.manager,
+      manager_id: manFinder.id,
     });
     init();
   });
@@ -39,7 +81,7 @@ let addEmployees = async () => {
 let addRoles = async () => {
   //prompt for answers
   inquirer.prompt(addRole).then(async (data) => {
-    //set department answer to variable to use in FindOne query
+    //set department choice to variable to use in FindOne query
     let depChoice = data.department;
     //we can use finder.(column name) to grab to value we need. --finder.id
     let finder = await Department.findOne({
@@ -48,7 +90,7 @@ let addRoles = async () => {
       },
       raw: true,
     });
-
+    //create the new role
     const role = await Role.create({
       title: data.title,
       salary: data.salary,
@@ -153,13 +195,13 @@ const addEmployee = [
     type: "input",
   },
   {
-    name: "role_id",
+    name: "role",
     message: "What is the Employee's role?",
     type: "list",
     choices: roleChoices,
   },
   {
-    name: "manager_id",
+    name: "manager",
     message: "Who is the employee's manager?",
     type: "list",
     choices: managerChoices,

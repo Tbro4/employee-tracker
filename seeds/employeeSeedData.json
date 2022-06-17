@@ -2,19 +2,25 @@
   {
     "first_name": "Tyler",
     "last_name": "Brooks",
+    "role": "Manager",
     "role_id": 1,
+    "manager": "Tyler Brooks",
     "manager_id": 1
   },
   {
     "first_name": "Nick",
     "last_name": "Rooks",
+    "role": "Wench",
     "role_id": 2,
+    "manager": "Tyler Brooks",
     "manager_id": 1
   },
   {
     "first_name": "Lauren",
     "last_name": "Books",
+    "role": "Janitor",
     "role_id": 3,
+    "manager": "Tyler Brooks",
     "manager_id": 1
   }
 ]
