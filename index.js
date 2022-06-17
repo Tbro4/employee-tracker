@@ -145,6 +145,24 @@ let updateRoles = async () => {
   });
 };
 
+let deleteEmployee = async () => {
+  inquirer.prompt(deleteEmpQs).then(async (data) => {
+    let employee = data.name;
+    let employeeSplit = employee.split(" ");
+    let firstName = employeeSplit[0];
+    let lastName = employeeSplit[1];
+
+    await Employee.destroy({
+      where: {
+        first_name: firstName,
+        last_name: lastName,
+      },
+    });
+
+    init();
+  });
+};
+
 const viewOrAdd = async (data) => {
   if (data.toDo === "View all employees") {
     const employees = await Employee.findAll({ raw: true });
@@ -173,6 +191,9 @@ const viewOrAdd = async (data) => {
   if (data.toDo === "Update employee role") {
     updateRoles();
   }
+  if (data.toDo === "Delete employee") {
+    deleteEmployee();
+  }
 };
 
 const openingQs = [
@@ -188,6 +209,7 @@ const openingQs = [
       "Add role",
       "Add department",
       "Update employee role",
+      "Delete employee",
     ],
   },
 ];
@@ -257,6 +279,15 @@ const updateRole = [
     message: "Which role do you want to assign the selected employee?",
     type: "list",
     choices: roleChoices,
+  },
+];
+
+const deleteEmpQs = [
+  {
+    name: "name",
+    message: "Which employee would you like to delete?",
+    type: "list",
+    choices: managerChoices,
   },
 ];
 
