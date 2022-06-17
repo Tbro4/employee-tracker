@@ -163,6 +163,20 @@ let deleteEmployee = async () => {
   });
 };
 
+let deleteDepartment = async () => {
+  inquirer.prompt(deleteDepQs).then(async (data) => {
+    let department = data.name;
+
+    await Department.destroy({
+      where: {
+        dep_name: department,
+      },
+    });
+
+    init();
+  });
+};
+
 const viewOrAdd = async (data) => {
   if (data.toDo === "View all employees") {
     const employees = await Employee.findAll({ raw: true });
@@ -194,6 +208,9 @@ const viewOrAdd = async (data) => {
   if (data.toDo === "Delete employee") {
     deleteEmployee();
   }
+  if (data.toDo === "Delete department") {
+    deleteDepartment();
+  }
 };
 
 const openingQs = [
@@ -210,6 +227,7 @@ const openingQs = [
       "Add department",
       "Update employee role",
       "Delete employee",
+      "Delete department",
     ],
   },
 ];
@@ -288,6 +306,15 @@ const deleteEmpQs = [
     message: "Which employee would you like to delete?",
     type: "list",
     choices: managerChoices,
+  },
+];
+
+const deleteDepQs = [
+  {
+    name: "name",
+    message: "Which department would you like to delete?",
+    type: "list",
+    choices: depChoices,
   },
 ];
 
