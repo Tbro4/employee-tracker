@@ -1,9 +1,8 @@
 const inquirer = require("inquirer");
+
 require("console.table");
 const { Employee, Role, Department } = require("./models");
 // const seedData = require("./seeds/seed");
-
-employees = [];
 
 let depChoices = async () => {
   const departmentChoices = await Department.findAll({
@@ -59,7 +58,6 @@ let addEmployees = async () => {
       },
       raw: true,
     });
-    //we need to split the names apart
 
     let manFinder = await Employee.findOne({
       where: {
@@ -110,6 +108,43 @@ let addDepartments = async () => {
   });
 };
 
+let updateRoles = async () => {
+  inquirer.prompt(updateRole).then(async (data) => {
+    //first&last name
+    let employee = data.name;
+    let employeeSplit = employee.split(" ");
+    let firstName = employeeSplit[0];
+    let lastName = employeeSplit[1];
+    let roleTitle = data.role;
+
+    let roleFinder = await Role.findOne({
+      where: {
+        title: roleTitle,
+      },
+      raw: true,
+    });
+
+    let finder = await Employee.findOne({
+      where: {
+        first_name: firstName,
+        last_name: lastName,
+      },
+      raw: true,
+    });
+
+    await Employee.update(
+      {
+        role: roleTitle,
+        role_id: roleFinder.id,
+      },
+      {
+        where: { id: finder.id },
+      }
+    );
+    init();
+  });
+};
+
 const viewOrAdd = async (data) => {
   if (data.toDo === "View all employees") {
     const employees = await Employee.findAll({ raw: true });
@@ -136,6 +171,7 @@ const viewOrAdd = async (data) => {
     addDepartments();
   }
   if (data.toDo === "Update employee role") {
+    updateRoles();
   }
 };
 
@@ -209,14 +245,15 @@ const addEmployee = [
 ];
 
 const updateRole = [
+  //were using 'managerChoices' because its already setup to return all emoloyee first/last names
   {
-    name: "empName",
+    name: "name",
     message: "Which employee's role do you want to update?",
     type: "list",
-    choices: employees,
+    choices: managerChoices,
   },
   {
-    name: "newRole",
+    name: "role",
     message: "Which role do you want to assign the selected employee?",
     type: "list",
     choices: roleChoices,
