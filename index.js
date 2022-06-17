@@ -1,4 +1,7 @@
 const inquirer = require("inquirer");
+require("console.table");
+const { Employee } = require("./models");
+// const seedData = require("./seeds/seed");
 
 let departmentChoices = [];
 
@@ -7,6 +10,32 @@ let roleChoices = [];
 let managerChoices = [];
 
 let employees = [];
+
+const viewOrAdd = async (data) => {
+  if (data.toDo === "View all employees") {
+    const employees = await Employee.findAll({ raw: true });
+    console.table(employees);
+    init();
+  }
+  if (data.toDo === "View all roles") {
+    console.log("Roles table:");
+  }
+  if (data.toDo === "View all departments") {
+    console.log("Departments table:");
+  }
+  if (data.toDo === "Add employees") {
+    console.log("what is name? etc");
+  }
+  if (data.toDo === "Add role") {
+    console.log("what is role name etc");
+  }
+  if (data.toDo === "Add department") {
+    console.log("what is dep name etc");
+  }
+  if (data.toDo === "Update employee role") {
+    console.log("which emp to update");
+  }
+};
 
 const openingQs = [
   {
@@ -93,7 +122,9 @@ const updateRole = [
 ];
 
 function init() {
-  inquirer.prompt(addEmployee);
+  inquirer.prompt(openingQs).then((data) => {
+    viewOrAdd(data);
+  });
 }
 
 init();

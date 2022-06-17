@@ -1,14 +1,11 @@
 [
   {
-    "id": 1,
     "dep_name": "Sales"
   },
   {
-    "id": 2,
     "dep_name": "Service"
   },
   {
-    "id": 3,
     "dep_name": "Parts"
   }
 ]
