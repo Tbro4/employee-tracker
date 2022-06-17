@@ -1,15 +1,46 @@
 const inquirer = require("inquirer");
 require("console.table");
-const { Employee } = require("./models");
+const { Employee, Role, Department } = require("./models");
 // const seedData = require("./seeds/seed");
 
-let departmentChoices = [];
+let departmentChoices = [1, 2, 3];
 
-let roleChoices = [];
+let roleChoices = [1, 2, "3"];
 
-let managerChoices = [];
+let managerChoices = [1, 2, "3"];
 
 let employees = [];
+
+let addEmployees = async () => {
+  inquirer.prompt(addEmployee).then(async (data) => {
+    const employee = await Employee.create({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      role_id: data.role_id,
+      manager_id: data.manager_id,
+    });
+    init();
+  });
+};
+let addRoles = async () => {
+  inquirer.prompt(addRole).then(async (data) => {
+    const role = await Role.create({
+      title: data.title,
+      salary: data.salary,
+      department_id: data.department_id,
+    });
+    init();
+  });
+};
+
+let addDepartments = async () => {
+  inquirer.prompt(addDepartment).then(async (data) => {
+    const department = await Department.create({
+      dep_name: data.dep_name,
+    });
+    init();
+  });
+};
 
 const viewOrAdd = async (data) => {
   if (data.toDo === "View all employees") {
@@ -18,22 +49,25 @@ const viewOrAdd = async (data) => {
     init();
   }
   if (data.toDo === "View all roles") {
-    console.log("Roles table:");
+    const roles = await Role.findAll({ raw: true });
+    console.table(roles);
+    init();
   }
   if (data.toDo === "View all departments") {
-    console.log("Departments table:");
+    const departments = await Department.findAll({ raw: true });
+    console.table(departments);
+    init();
   }
-  if (data.toDo === "Add employees") {
-    console.log("what is name? etc");
+  if (data.toDo === "Add employee") {
+    addEmployees();
   }
   if (data.toDo === "Add role") {
-    console.log("what is role name etc");
+    addRoles();
   }
   if (data.toDo === "Add department") {
-    console.log("what is dep name etc");
+    addDepartments();
   }
   if (data.toDo === "Update employee role") {
-    console.log("which emp to update");
   }
 };
 
@@ -56,7 +90,7 @@ const openingQs = [
 
 const addDepartment = [
   {
-    name: "depName",
+    name: "dep_name",
     message: "What is the name of the department?",
     type: "input",
   },
@@ -64,7 +98,7 @@ const addDepartment = [
 
 const addRole = [
   {
-    name: "roleName",
+    name: "title",
     message: "What is the name of the role?",
     type: "input",
   },
@@ -74,7 +108,7 @@ const addRole = [
     type: "input",
   },
   {
-    name: "roleDep",
+    name: "department_id",
     message: "What department does the role belong to?",
     type: "list",
     choices: departmentChoices,
@@ -83,23 +117,23 @@ const addRole = [
 
 const addEmployee = [
   {
-    name: "empFirst",
+    name: "first_name",
     message: "What is the employee's first name?",
     type: "input",
   },
   {
-    name: "empLast",
+    name: "last_name",
     message: "What is the employee's last name?",
     type: "input",
   },
   {
-    name: "empRole",
+    name: "role_id",
     message: "What is the Employee's role?",
     type: "list",
     choices: roleChoices,
   },
   {
-    name: "empManager",
+    name: "manager_id",
     message: "Who is the employee's manager?",
     type: "list",
     choices: managerChoices,
