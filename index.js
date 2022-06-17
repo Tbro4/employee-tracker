@@ -3,13 +3,27 @@ require("console.table");
 const { Employee, Role, Department } = require("./models");
 // const seedData = require("./seeds/seed");
 
-let departmentChoices = [1, 2, 3];
-
 let roleChoices = [1, 2, "3"];
 
 let managerChoices = [1, 2, "3"];
 
 let employees = [];
+
+let depChoices = async () => {
+  const departmentChoices = await Department.findAll({
+    attributes: ["id", "dep_name"],
+    raw: true,
+  });
+  let choices = [];
+  departmentChoices.forEach((choice) => {
+    choices.push(choice.dep_name);
+  });
+
+  return choices;
+
+  // return departmentChoices;
+  // process.exit(0);
+};
 
 let addEmployees = async () => {
   inquirer.prompt(addEmployee).then(async (data) => {
@@ -23,11 +37,23 @@ let addEmployees = async () => {
   });
 };
 let addRoles = async () => {
+  //prompt for answers
   inquirer.prompt(addRole).then(async (data) => {
+    //set department answer to variable to use in FindOne query
+    let depChoice = data.department;
+    //we can use finder.(column name) to grab to value we need. --finder.id
+    let finder = await Department.findOne({
+      where: {
+        dep_name: depChoice,
+      },
+      raw: true,
+    });
+
     const role = await Role.create({
       title: data.title,
       salary: data.salary,
-      department_id: data.department_id,
+      department: data.department,
+      department_id: finder.id,
     });
     init();
   });
@@ -108,10 +134,10 @@ const addRole = [
     type: "input",
   },
   {
-    name: "department_id",
+    name: "department",
     message: "What department does the role belong to?",
     type: "list",
-    choices: departmentChoices,
+    choices: depChoices,
   },
 ];
 

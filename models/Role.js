@@ -16,6 +16,9 @@ Role.init(
     salary: {
       type: DataTypes.STRING,
     },
+    department: {
+      type: DataTypes.STRING,
+    },
     department_id: {
       type: DataTypes.INTEGER,
       references: {

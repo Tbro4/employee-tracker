@@ -2,16 +2,19 @@
   {
     "title": "Manager",
     "salary": 80000,
+    "department": "Sales",
     "department_id": 1
   },
   {
     "title": "Wench",
     "salary": 4000,
+    "department": "Service",
     "department_id": 2
   },
   {
     "title": "Janitor",
     "salary": 32000,
+    "department": "Parts",
     "department_id": 3
   }
 ]
