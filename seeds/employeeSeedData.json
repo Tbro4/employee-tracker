@@ -2,25 +2,49 @@
   {
     "first_name": "Tyler",
     "last_name": "Brooks",
-    "role": "Manager",
+    "role": "Sales Manager",
     "role_id": 1,
-    "manager": "Tyler Brooks",
-    "manager_id": 1
+    "manager": null,
+    "manager_id": null
   },
   {
-    "first_name": "Nick",
-    "last_name": "Rooks",
-    "role": "Wench",
+    "first_name": "Kevin",
+    "last_name": "Bacon",
+    "role": "Salesperson",
     "role_id": 2,
     "manager": "Tyler Brooks",
     "manager_id": 1
   },
   {
-    "first_name": "Lauren",
-    "last_name": "Books",
-    "role": "Janitor",
+    "first_name": "Richard",
+    "last_name": "Harper",
+    "role": "Service Manager",
     "role_id": 3,
-    "manager": "Tyler Brooks",
-    "manager_id": 1
+    "manager": null,
+    "manager_id": null
+  },
+  {
+    "first_name": "Carry",
+    "last_name": "Malone",
+    "role": "Mechanic",
+    "role_id": 4,
+    "manager": "Richard Harper",
+    "manager_id": 3
+  },
+  {
+    "first_name": "Greg",
+    "last_name": "Shore",
+    "role": "Parts Manager",
+    "role_id": 5,
+    "manager": null,
+    "manager_id": null
+  },
+  {
+    "first_name": "Julie",
+    "last_name": "Jones",
+    "role": "Warehouse Worker",
+    "role_id": 6,
+    "manager": "Greg Shore",
+    "manager_id": 5
   }
 ]

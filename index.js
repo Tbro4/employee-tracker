@@ -34,7 +34,7 @@ let managerChoices = async () => {
     attributes: ["id", "first_name", "last_name"],
     raw: true,
   });
-  let choices = [];
+  let choices = ["none"];
   manChoices.forEach((choice) => {
     choices.push(`${choice.first_name} ${choice.last_name}`);
   });
@@ -65,14 +65,25 @@ let addEmployees = async () => {
       },
       raw: true,
     });
-    const employee = await Employee.create({
-      first_name: data.first_name,
-      last_name: data.last_name,
-      role: data.role,
-      role_id: finder.id,
-      manager: data.manager,
-      manager_id: manFinder.id,
-    });
+    if (firstName === "none") {
+      const employee = await Employee.create({
+        first_name: data.first_name,
+        last_name: data.last_name,
+        role: data.role,
+        role_id: finder.id,
+        manager: null,
+        manager_id: null,
+      });
+    } else {
+      const employee = await Employee.create({
+        first_name: data.first_name,
+        last_name: data.last_name,
+        role: data.role,
+        role_id: finder.id,
+        manager: data.manager,
+        manager_id: manFinder.id,
+      });
+    }
     init();
   });
 };
@@ -159,6 +170,15 @@ let deleteEmployee = async () => {
       },
     });
 
+    await Employee.update(
+      {
+        manager: null,
+      },
+      {
+        where: { manager: employee },
+      }
+    );
+
     init();
   });
 };
@@ -170,6 +190,19 @@ let deleteDepartment = async () => {
     await Department.destroy({
       where: {
         dep_name: department,
+      },
+    });
+
+    init();
+  });
+};
+let deleteRole = async () => {
+  inquirer.prompt(deleteRoleQs).then(async (data) => {
+    let role = data.name;
+
+    await Role.destroy({
+      where: {
+        title: role,
       },
     });
 
@@ -211,6 +244,13 @@ const viewOrAdd = async (data) => {
   if (data.toDo === "Delete department") {
     deleteDepartment();
   }
+  if (data.toDo === "Delete role") {
+    deleteRole();
+  }
+  if (data.toDo === "Exit") {
+    console.log("Goodbye");
+    process.exit(0);
+  }
 };
 
 const openingQs = [
@@ -228,6 +268,8 @@ const openingQs = [
       "Update employee role",
       "Delete employee",
       "Delete department",
+      "Delete role",
+      "Exit",
     ],
   },
 ];
@@ -315,6 +357,14 @@ const deleteDepQs = [
     message: "Which department would you like to delete?",
     type: "list",
     choices: depChoices,
+  },
+];
+const deleteRoleQs = [
+  {
+    name: "name",
+    message: "Which role would you like to delete?",
+    type: "list",
+    choices: roleChoices,
   },
 ];
 

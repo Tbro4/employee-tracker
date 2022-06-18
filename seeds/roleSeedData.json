@@ -1,18 +1,36 @@
 [
   {
-    "title": "Manager",
+    "title": "Sales Manager",
     "salary": 80000,
     "department": "Sales",
     "department_id": 1
   },
   {
-    "title": "Wench",
-    "salary": 4000,
+    "title": "Salesperson",
+    "salary": 35000,
+    "department": "Sales",
+    "department_id": 1
+  },
+  {
+    "title": "Service Manager",
+    "salary": 32000,
     "department": "Service",
     "department_id": 2
   },
   {
-    "title": "Janitor",
+    "title": "Mechanic",
+    "salary": 45000,
+    "department": "Service",
+    "department_id": 2
+  },
+  {
+    "title": "Parts Manager",
+    "salary": 42000,
+    "department": "Parts",
+    "department_id": 3
+  },
+  {
+    "title": "Warehouse worker",
     "salary": 32000,
     "department": "Parts",
     "department_id": 3
