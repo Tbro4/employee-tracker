@@ -224,6 +224,32 @@ const seeBudgets = async () => {
   return resp;
 };
 
+let viewDepEmps = async () => {
+  inquirer.prompt(viewDepEmpQ).then(async (data) => {
+    let department = data.name;
+
+    const sorted = await Role.findAll({
+      where: {
+        department: department,
+      },
+      raw: true,
+    });
+    let titleArr = [];
+    sorted.forEach((title) => {
+      titleArr.push(title.title);
+    });
+
+    const emps = await Employee.findAll({
+      where: {
+        role: titleArr,
+      },
+      raw: true,
+    });
+    console.table(emps);
+    init();
+  });
+};
+
 const viewOrAdd = async (data) => {
   if (data.toDo === "View all employees") {
     const employees = await Employee.findAll({ raw: true });
@@ -261,14 +287,17 @@ const viewOrAdd = async (data) => {
   if (data.toDo === "Delete role") {
     deleteRole();
   }
-  if (data.toDo === "Exit") {
-    console.log("Goodbye");
-    process.exit(0);
-  }
   if (data.toDo === "See department utilized budgets") {
     const employees = await seeBudgets();
     console.table(employees);
     init();
+  }
+  if (data.toDo === "View employees by department") {
+    viewDepEmps();
+  }
+  if (data.toDo === "Exit") {
+    console.log("Goodbye");
+    process.exit(0);
   }
 };
 
@@ -289,6 +318,7 @@ const openingQs = [
       "Delete department",
       "Delete role",
       "See department utilized budgets",
+      "View employees by department",
       "Exit",
     ],
   },
@@ -385,6 +415,15 @@ const deleteRoleQs = [
     message: "Which role would you like to delete?",
     type: "list",
     choices: roleChoices,
+  },
+];
+
+const viewDepEmpQ = [
+  {
+    name: "name",
+    message: "Which department's employees would you like to see?",
+    type: "list",
+    choices: depChoices,
   },
 ];
 
