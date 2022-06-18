@@ -14,7 +14,7 @@ Role.init(
       type: DataTypes.STRING,
     },
     salary: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     department: {
       type: DataTypes.STRING,

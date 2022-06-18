@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const Sequelize = require("sequelize");
 
 require("console.table");
 const { Employee, Role, Department } = require("./models");
@@ -210,6 +211,19 @@ let deleteRole = async () => {
   });
 };
 
+const seeBudgets = async () => {
+  let resp = await Role.findAll({
+    attributes: [
+      "department",
+      [Sequelize.fn("sum", Sequelize.col("salary")), "total_amount"],
+    ],
+    group: ["Role.department"],
+    raw: true,
+  });
+
+  return resp;
+};
+
 const viewOrAdd = async (data) => {
   if (data.toDo === "View all employees") {
     const employees = await Employee.findAll({ raw: true });
@@ -251,6 +265,11 @@ const viewOrAdd = async (data) => {
     console.log("Goodbye");
     process.exit(0);
   }
+  if (data.toDo === "See department utilized budgets") {
+    const employees = await seeBudgets();
+    console.table(employees);
+    init();
+  }
 };
 
 const openingQs = [
@@ -269,6 +288,7 @@ const openingQs = [
       "Delete employee",
       "Delete department",
       "Delete role",
+      "See department utilized budgets",
       "Exit",
     ],
   },
